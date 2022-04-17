@@ -5,6 +5,9 @@ export const darkTheme = {
   shadowColorOne: "#171420",
   shadowColorTwo: "#312a42",
   boxShadow: "30px 30px 58px #171420,-30px -30px 58px #312a42",
+  buttonShadow: "inset 30px 30px 35px #191522, inset -30px -30px 35px #2F2940",
+  buttonHoverShadow:
+    "inset 30px 30px 50px #191522, inset -30px -30px 50px #2F2940",
 };
 
 export const lightTheme = {
