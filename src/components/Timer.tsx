@@ -29,7 +29,7 @@ const InnerCircle = styled.circle`
   stroke-linecap: round;
 `;
 
-const TimeText = styled.text`
+const TimeText = styled.span`
   font-size: 3rem;
   font-weight: bold;
   position: absolute;
@@ -51,7 +51,7 @@ export function Timer({
   const circumference = 2 * Math.PI * radius;
 
   useEffect(() => {
-    const progressOffset = -0.75 * circumference;
+    const progressOffset = -((100 - progress) / 100) * circumference;
     setOffset(progressOffset);
   }, [setOffset, progress, circumference, offset]);
   return (
@@ -74,9 +74,7 @@ export function Timer({
           strokeDashoffset={offset}
         />
       </CircularTimer>
-      <TimeText x={center} y={center}>
-        {timer}
-      </TimeText>
+      <TimeText>{timer}</TimeText>
     </>
   );
 }
