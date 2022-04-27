@@ -5,6 +5,7 @@ import { useDataProvider } from "../context/data-context";
 import { GrPlay } from "react-icons/gr";
 import { VscDebugRestart } from "react-icons/vsc";
 import { AiOutlinePause } from "react-icons/ai";
+import { Header } from "../components/Header";
 
 const FullScreen = styled.div`
   min-height: 100vh;
@@ -108,6 +109,7 @@ const Button = styled.button`
   justify-content: center;
   align-items: center;
   gap: 5px;
+  color: ${(prop) => prop.theme.textColor};
   &:hover {
     box-shadow: ${(prop) => prop.theme.buttonHoverShadow};
   }
@@ -141,6 +143,7 @@ export function Todo() {
 
   return (
     <FullScreen>
+      <Header />
       <TimerContainer>
         <Circle>
           <Timer
@@ -162,7 +165,8 @@ export function Todo() {
             Pause
           </Button>
           <Button>
-            <VscDebugRestart /> Restart
+            <VscDebugRestart />
+            Restart
           </Button>
         </ButtonContainer>
       </TimerContainer>

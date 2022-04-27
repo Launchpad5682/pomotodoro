@@ -1,17 +1,28 @@
-import { createContext, ReactNode, useContext } from "react";
-import { darkTheme, lightTheme } from "../themes/themes";
+import { createContext, ReactNode, useContext, useReducer } from "react";
+import { reducer } from "../reducers/reducer";
+import { lightTheme } from "../themes/themes";
 
 interface DataContextInterface {
   theme: any;
+  dispatch: Function;
 }
 
-const DataContext = createContext<DataContextInterface>({ theme: lightTheme });
+const DataContext = createContext<DataContextInterface>({
+  theme: lightTheme,
+  dispatch: () => {},
+});
+
+const initialState = {
+  theme: lightTheme,
+};
 
 const DataProvider = ({ children }: { children: ReactNode }) => {
-  const theme = darkTheme;
+  const [{ theme }, dispatch] = useReducer(reducer, initialState);
 
   return (
-    <DataContext.Provider value={{ theme }}>{children}</DataContext.Provider>
+    <DataContext.Provider value={{ theme, dispatch }}>
+      {children}
+    </DataContext.Provider>
   );
 };
 
