@@ -8,6 +8,10 @@ export const darkTheme = {
   buttonShadow: "inset 30px 30px 35px #191522, inset -30px -30px 35px #2F2940",
   buttonHoverShadow:
     "inset 30px 30px 50px #191522, inset -30px -30px 50px #2F2940",
+  iconShadow: "11.71px 10px 13px #171420, -10px -11.71px 13px #312A42",
+  iconShadowHover:
+    "11.71px 20px 13px #171420, -20px -11.71px 13px #312A42",
+  iconBackgroundColor: "#241f31",
 };
 
 export const lightTheme = {
@@ -20,4 +24,7 @@ export const lightTheme = {
   buttonShadow: "inset 5px 5px 30px #5f5f91, inset -10px -10px 30px #b5b3ff",
   buttonHoverShadow:
     "inset 5px 5px 40px #5f5f91, inset -10px -10px 40px #b5b3ff",
+  iconShadow: "10px 10px 15px #7574b1, -10px -10px 15px #9f9ef3",
+  iconShadowHover: "10px 10px 20px #7574b1, -10px -10px 20px #9f9ef3",
+  iconBackgroundColor: "#8a89d2",
 };
