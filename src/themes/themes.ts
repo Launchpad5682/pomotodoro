@@ -9,9 +9,13 @@ export const darkTheme = {
   buttonHoverShadow:
     "inset 30px 30px 50px #191522, inset -30px -30px 50px #2F2940",
   iconShadow: "11.71px 10px 13px #171420, -10px -11.71px 13px #312A42",
-  iconShadowHover:
-    "11.71px 20px 13px #171420, -20px -11.71px 13px #312A42",
+  iconShadowHover: "11.71px 20px 13px #171420, -20px -11.71px 13px #312A42",
   iconBackgroundColor: "#241f31",
+  inputFieldShadow:
+    "inset 12.31px 12.31px 18px #1F1B2A, inset -12.31px -12.31px 88px #292338",
+  checkboxShadow: "inset 2px 2px 3px #654da1, inset -2px -2px 3px #191522",
+  checkboxShadowChecked: "5px 5px 10px #171420, -5px -5px 10px #312a42",
+  checkboxBackgroundColor: "#7473b0",
 };
 
 export const lightTheme = {
@@ -27,4 +31,10 @@ export const lightTheme = {
   iconShadow: "10px 10px 15px #7574b1, -10px -10px 15px #9f9ef3",
   iconShadowHover: "10px 10px 20px #7574b1, -10px -10px 20px #9f9ef3",
   iconBackgroundColor: "#8a89d2",
+  inputFieldShadow:
+    "inset 12.31px 12.31px 18px #7675b4, inset -12.31px -12.31px 18px #9e9df0",
+  checkboxShadow:
+    "inset 2.31px 2.31px 2px #7675b4, inset -2.31px -2.31px 2px #9e9df0",
+  checkboxShadowChecked: "5px 5px 10px #7574b1, -5px -5px 10px #9f9ef3",
+  checkboxBackgroundColor: "#7473b0",
 };
