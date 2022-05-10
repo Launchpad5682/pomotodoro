@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import { Timer } from "../components/Timer";
-import { useDataProvider } from "../context/data-context";
+import { Timer } from "../../components";
+import { useDataProvider } from "../../context/data-context";
 import { GrPlay } from "react-icons/gr";
 import { VscDebugRestart } from "react-icons/vsc";
 import { AiOutlinePause } from "react-icons/ai";
-import { Header } from "../components/Header";
+import { Header } from "../../components";
 
 const FullScreen = styled.div`
   min-height: 100vh;
