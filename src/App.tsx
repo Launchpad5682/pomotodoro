@@ -1,10 +1,18 @@
+import { useEffect } from "react";
 import { Route, Routes } from "react-router-dom";
 import { ThemeProvider } from "styled-components";
-import { useDataProvider } from "./context/data-context";
+import { TaskInterface, useDataProvider } from "./context/data-context";
+import { useLocalStorage } from "./hooks/useLocalStorage";
 import { Home, Todo } from "./routes";
 
 function App() {
-  const { theme } = useDataProvider();
+  const { theme, dispatch } = useDataProvider();
+  const { storedValue } = useLocalStorage<TaskInterface[]>("tasks", []);
+
+  useEffect(() => {
+    dispatch({ type: "SET_TASKS", payload: storedValue });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [storedValue]);
 
   return (
     <ThemeProvider theme={theme}>
