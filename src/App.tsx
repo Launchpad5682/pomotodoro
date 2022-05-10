@@ -1,8 +1,7 @@
 import { Route, Routes } from "react-router-dom";
 import { ThemeProvider } from "styled-components";
 import { useDataProvider } from "./context/data-context";
-import { Home } from "./routes/Home";
-import { Todo } from "./routes/Todo";
+import { Home, Todo } from "./routes";
 
 function App() {
   const { theme } = useDataProvider();
