@@ -1,7 +1,8 @@
 import { useEffect } from "react";
 import { Route, Routes } from "react-router-dom";
 import { ThemeProvider } from "styled-components";
-import { TaskInterface, useDataProvider } from "./context/data-context";
+import { TaskInterface } from "./components/types";
+import { useDataProvider } from "./context/data-context";
 import { useLocalStorage } from "./hooks/useLocalStorage";
 import { Home, Todo } from "./routes";
 
@@ -18,7 +19,7 @@ function App() {
     <ThemeProvider theme={theme}>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/todo" element={<Todo />} />
+        <Route path="/:todo" element={<Todo />} />
       </Routes>
     </ThemeProvider>
   );
