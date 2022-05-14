@@ -1,4 +1,4 @@
-import { TaskInterface } from "../context/data-context";
+import { TaskInterface } from "../components/types";
 
 type State = {
   theme: any;

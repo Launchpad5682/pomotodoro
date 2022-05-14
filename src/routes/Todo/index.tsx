@@ -2,10 +2,13 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { Timer } from "../../components";
 import { useDataProvider } from "../../context/data-context";
-import { GrPlay } from "react-icons/gr";
 import { VscDebugRestart } from "react-icons/vsc";
-import { AiOutlinePause } from "react-icons/ai";
-import { Header } from "../../components";
+import { AiOutlinePauseCircle, AiOutlinePlayCircle } from "react-icons/ai";
+import { TaskInterface } from "../../components/types";
+import { percentageTimeLeft } from "../../utils";
+import { useDebounce } from "../../hooks/useDebounce";
+import { useLocalStorage } from "../../hooks/useLocalStorage";
+import { useDocumentTitle } from "../../hooks/useDocumentTitle";
 
 const FullScreen = styled.div`
   min-height: 100vh;
@@ -115,11 +118,118 @@ const Button = styled.button`
   }
 `;
 
+const SubtitleText = styled.span`
+  font-size: 1.2rem;
+`;
+
 export function Todo() {
+  const [timerSwitch, setTimerSwitch] = useState(false);
   const {
     theme: { textColor, darkColor },
+    activeTask,
+    tasks,
+    dispatch,
   } = useDataProvider();
   const [timerSize, setTimerSize] = useState(400);
+  const {
+    _id,
+    title,
+    description,
+    focusTime,
+    shortBreakTime,
+    longBreakTime,
+    timerMode,
+    timeStamp,
+    breakCount,
+  } = activeTask as TaskInterface;
+  const [timer, setTimer] = useState({
+    min: 0,
+    sec: 0,
+    progress: 100,
+    timerMode,
+    breakCount,
+  });
+  const timerSwitchHandler = () => setTimerSwitch((prev) => !prev);
+
+  const debouncedTimeStamp = useDebounce<number>(
+    timer.min * 60 + timer.sec,
+    1500
+  );
+  const setDocumentTitle = useDocumentTitle(`${timer.min}m:${timer.sec}s`);
+  // console.log(debouncedTimeStamp, "debounced time stamp");
+  const { setValue } = useLocalStorage<TaskInterface[]>(
+    "tasks",
+    tasks as TaskInterface[]
+  );
+
+  const [totalTime, setTotalTime] = useState(
+    timerMode === "focus"
+      ? focusTime
+      : timerMode === "short"
+      ? shortBreakTime
+      : longBreakTime
+  );
+
+  const resetTimer = () =>
+    setTimer((prev) => ({
+      ...prev,
+      min:
+        timerMode === "focus"
+          ? focusTime
+          : timerMode === "short"
+          ? shortBreakTime
+          : longBreakTime,
+      sec: 0,
+      progress: 100,
+    }));
+
+  const nextTimer = () => {
+    console.log("Next timer called");
+    const updatedBreakCount =
+      timerMode !== "focus" ? Number(breakCount + 1) : Number(breakCount);
+    const updatedTimerMode =
+      timerMode !== "focus"
+        ? "focus"
+        : (breakCount + 1) % 4 === 0
+        ? "long"
+        : "short";
+    setTimer((prev) => {
+      return {
+        ...prev,
+        breakCount: updatedBreakCount,
+        timerMode: updatedTimerMode,
+        min:
+          timerMode === "focus"
+            ? focusTime
+            : timerMode === "short"
+            ? shortBreakTime
+            : longBreakTime,
+        sec: 0,
+        progress: 100,
+      };
+    });
+    const updatedTasks = tasks.map((task) =>
+      task._id === _id
+        ? {
+            ...task,
+            timeStamp: null,
+            timerMode: updatedTimerMode,
+            breakCount: updatedBreakCount,
+          }
+        : task
+    );
+    setValue(updatedTasks as TaskInterface[]);
+    dispatch({
+      type: "SET_ACTIVE_TASK",
+      payload: {
+        ...activeTask,
+        timeStamp: null,
+        timerMode: updatedTimerMode,
+        breakCount: updatedBreakCount,
+      },
+    });
+    dispatch({ type: "SET_TASKS", payload: updatedTasks });
+  };
 
   useEffect(() => {
     if (window.innerWidth < 500) {
@@ -141,43 +251,154 @@ export function Todo() {
     });
   }, []);
 
+  // timer
+  useEffect(() => {
+    let time = { min: 0, sec: 0 };
+    console.log(totalTime, "total time");
+    setTotalTime(
+      timerMode === "focus"
+        ? focusTime
+        : timerMode === "short"
+        ? shortBreakTime
+        : longBreakTime
+    );
+
+    if (timeStamp === null) {
+      time.min =
+        timerMode === "focus"
+          ? focusTime
+          : timerMode === "short"
+          ? shortBreakTime
+          : longBreakTime;
+    } else {
+      const min = Math.floor(timeStamp / 60);
+
+      const sec = timeStamp - min * 60;
+
+      time = { min, sec };
+    }
+
+    setTimer((prev) => ({
+      ...prev,
+      progress: timeStamp === null ? 100 : (timeStamp / (totalTime * 60)) * 100,
+      min: time.min,
+      sec: time.sec,
+    }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [timerMode]);
+
+  useEffect(() => {
+    let id: any = null;
+    if (timerSwitch) {
+      id = setInterval(() => {
+        if (timer.sec === 0 && timer.min === 0) {
+          setTimerSwitch(false);
+          setTimer((prev) => ({
+            ...prev,
+            sec: 0,
+            progress: 0,
+          }));
+          nextTimer();
+        } else {
+          setTimer((prev) => {
+            if (prev.sec === 0 && prev.min !== 0) {
+              return {
+                ...prev,
+                min: prev.min - 1,
+                sec: 59,
+                progress: percentageTimeLeft(prev.min - 1, 59, totalTime * 60),
+              };
+            } else {
+              return {
+                ...prev,
+                sec: prev.sec - 1,
+                progress: percentageTimeLeft(
+                  prev.min,
+                  prev.sec - 1,
+                  totalTime * 60
+                ),
+              };
+            }
+          });
+        }
+
+        console.log(timer);
+      }, 1000);
+    } else {
+      clearInterval(id);
+    }
+
+    return () => clearInterval(id);
+  }, [timerSwitch, timer, focusTime]);
+
+  useEffect(() => {
+    setDocumentTitle(
+      `${timer.min < 10 ? `0${timer.min}` : timer.min}m:${
+        timer.sec < 10 ? `0${timer.sec}` : timer.sec
+      }s | Pomotodoro`
+    );
+  }, [setDocumentTitle, timer]);
+
+  //saving the timestamp to localStorage
+  useEffect(() => {
+    console.log("saving data");
+    const updatedTasks = tasks.map((task) =>
+      task._id === _id
+        ? {
+            ...task,
+            timeStamp: debouncedTimeStamp,
+          }
+        : { ...task }
+    );
+
+    setValue(updatedTasks as TaskInterface[]);
+    dispatch({ type: "SET_TASKS", payload: updatedTasks });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [debouncedTimeStamp]);
+
   return (
     <FullScreen>
-      <Header />
       <TimerContainer>
         <Circle>
           <Timer
-            progress={75}
+            progress={timer.progress}
             size={timerSize}
             strokeWidth={timerSize < 400 ? 8 : 15}
             colorStrokeOne={darkColor}
             colorStrokeTwo={textColor}
-            timer="10m:20s"
+            timer={`${timer.min < 10 ? `0${timer.min}` : timer.min}m:${
+              timer.sec < 10 ? `0${timer.sec}` : timer.sec
+            }s`}
           />
         </Circle>
+        <SubtitleText>
+          {timerMode === "focus"
+            ? `Focus Time of ${focusTime}mins`
+            : timerMode === "short"
+            ? `Short Break of ${shortBreakTime}mins`
+            : `Long Break of ${longBreakTime}mins`}
+        </SubtitleText>
         <ButtonContainer>
-          <Button>
-            <GrPlay />
-            Start
-          </Button>
-          <Button>
-            <AiOutlinePause />
-            Pause
-          </Button>
-          <Button>
+          {timerSwitch ? (
+            <Button onClick={timerSwitchHandler}>
+              <AiOutlinePauseCircle />
+              Pause
+            </Button>
+          ) : (
+            <Button onClick={timerSwitchHandler}>
+              <AiOutlinePlayCircle />
+              Start
+            </Button>
+          )}
+          <Button onClick={resetTimer}>
             <VscDebugRestart />
-            Restart
+            Reset
           </Button>
         </ButtonContainer>
       </TimerContainer>
       <TodoDescription>
-        <HeadingText>Geography Homework</HeadingText>
-        <ParagraphText>
-          Lorem, ipsum dolor sit amet consectetur adipisicing elit. A
-          exercitationem nostrum, sequi ipsum porro quasi perferendis nemo,
-          tempora explicabo dolore dicta! Et possimus fugiat, inventore nam
-          accusamus porro molestias quia.
-        </ParagraphText>
+        <HeadingText>{title}</HeadingText>
+        <ParagraphText>{description}</ParagraphText>
       </TodoDescription>
     </FullScreen>
   );

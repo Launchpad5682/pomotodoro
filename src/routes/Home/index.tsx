@@ -22,7 +22,8 @@ const FullScreen = styled.div`
 
 export const Home = () => {
   const { modal, dispatch } = useDataProvider();
-  const createTask = () => dispatch({ type: "TOGGLE_MODAL", payload: true });
+  const createTask = () =>
+    dispatch({ type: "TOGGLE_MODAL", payload: { visible: true, edit: false } });
 
   return (
     <FullScreen>
@@ -31,7 +32,7 @@ export const Home = () => {
       <FloatingActionButton handler={createTask}>
         <RiAddLine />
       </FloatingActionButton>
-      {modal && <ModalForm />}
+      {modal.visible && <ModalForm />}
     </FullScreen>
   );
 };
