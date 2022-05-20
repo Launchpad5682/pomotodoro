@@ -7,6 +7,9 @@ export function Header() {
 
   return (
     <Styled.Header>
+      <Styled.Logo>
+        Pomo<span>todo</span>ro
+      </Styled.Logo>
       <Styled.ThemeModeIconContainer>
         <Styled.ThemeIcon onClick={toggleTheme}>
           {theme === "light" ? <RiSunLine /> : <RiMoonLine />}

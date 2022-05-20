@@ -11,4 +11,14 @@ const TodoList = styled.div`
   gap: 2rem;
 `;
 
-export { TodoList };
+const EmptyTodoList = styled.div`
+  box-sizing: border-box;
+  padding: 1.5rem;
+  max-width: 30rem;
+  font-size: 1.5rem;
+  background: ${(props) => props.theme.iconBackgroundColor};
+  border-radius: 1rem;
+  box-shadow: ${(props) => props.theme.iconShadow};
+`;
+
+export { TodoList, EmptyTodoList };

@@ -5,6 +5,5 @@ export { Header } from "./Header";
 export { ModalForm } from "./ModalForm";
 export { Timer } from "./Timer";
 export { SearchBar } from "./SearchBar";
-export { SideBar } from "./SideBar";
 export { TodoList } from "./TodoList";
 export { TodoListItem } from "./TodoListItem";

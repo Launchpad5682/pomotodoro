@@ -11,7 +11,7 @@ const FloatingActionButton = styled.button`
   justify-content: center;
   align-items: center;
   background: ${(props) => props.theme.iconBackgroundColor};
-  border-radius: 50%;
+  border-radius: 20%;
   box-shadow: ${(props) => props.theme.iconShadow};
   cursor: pointer;
   bottom: 2rem;

@@ -9,6 +9,14 @@ const Header = styled.div`
   box-sizing: border-box;
 `;
 
+const Logo = styled.span`
+  font-size: 2rem;
+  cursor: pointer;
+  > span {
+    font-weight: 700;
+  }
+`;
+
 const ThemeModeIconContainer = styled.span`
   position: relative;
   font-size: 1.5rem;
@@ -43,4 +51,4 @@ const ThemeIcon = styled.span`
   font-size: ${(props) => props.theme.iconSize}rem;
 `;
 
-export { Header, ThemeModeIconContainer, ThemeIcon };
+export { Header, Logo, ThemeModeIconContainer, ThemeIcon };
