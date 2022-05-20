@@ -3,21 +3,25 @@ import styled, { css } from "styled-components";
 const Modal = styled.div`
   position: absolute;
   display: flex;
+  flex-direction: column;
+  padding: 1.2rem;
   justify-content: center;
   align-items: center;
   width: 100%;
-  height: 100%;
+  min-height: 100vh;
+  overflow-y: auto;
   background: linear-gradient(${(props) => props.theme.backgroundColor});
   box-sizing: border-box;
 `;
 
 const Form = styled.form`
-  max-width: 30rem;
-  width: 100%;
-  padding: 1rem;
+  box-sizing: border-box;
   display: flex;
-  margin: 0 1rem;
   flex-direction: column;
+  width: 100%;
+  max-width: 30rem;
+  height: fit-content;
+  padding: 1rem;
   background: linear-gradient(${(props) => props.theme.backgroundColor});
   box-shadow: ${(props) => props.theme.iconShadow};
   border-radius: 12px;

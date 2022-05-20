@@ -7,6 +7,7 @@ import {
 } from "../../components";
 import { RiAddLine } from "react-icons/ri";
 import { useDataProvider } from "../../context/data-context";
+import { useDocumentTitle } from "../../hooks/useDocumentTitle";
 
 const FullScreen = styled.div`
   height: 100vh;
@@ -22,7 +23,10 @@ const FullScreen = styled.div`
 
 export const Home = () => {
   const { modal, dispatch } = useDataProvider();
-  const createTask = () => dispatch({ type: "TOGGLE_MODAL", payload: true });
+  const createTask = () =>
+    dispatch({ type: "TOGGLE_MODAL", payload: { visible: true, edit: false } });
+
+  useDocumentTitle("Pomotodoro | Home");
 
   return (
     <FullScreen>
@@ -31,7 +35,7 @@ export const Home = () => {
       <FloatingActionButton handler={createTask}>
         <RiAddLine />
       </FloatingActionButton>
-      {modal && <ModalForm />}
+      {modal.visible && <ModalForm />}
     </FullScreen>
   );
 };

@@ -1,11 +1,4 @@
-import { useEffect, useState } from "react";
 import styled from "styled-components";
-import { Timer } from "../components/Timer";
-import { useDataProvider } from "../context/data-context";
-import { GrPlay } from "react-icons/gr";
-import { VscDebugRestart } from "react-icons/vsc";
-import { AiOutlinePause } from "react-icons/ai";
-import { Header } from "../components/Header";
 
 const FullScreen = styled.div`
   min-height: 100vh;
@@ -24,6 +17,14 @@ const FullScreen = styled.div`
   @media screen and (min-width: 1200px) {
     flex-direction: row;
   }
+`;
+
+const MainContainer = styled.div`
+  display: flex;
+  width: 100%;
+  height: 100%;
+  background-color: yellow;
+  justify-content: space-around;
 `;
 
 const TimerContainer = styled.div`
@@ -115,70 +116,19 @@ const Button = styled.button`
   }
 `;
 
-export function Todo() {
-  const {
-    theme: { textColor, darkColor },
-  } = useDataProvider();
-  const [timerSize, setTimerSize] = useState(400);
+const SubtitleText = styled.span`
+  font-size: 1.2rem;
+`;
 
-  useEffect(() => {
-    if (window.innerWidth < 500) {
-      setTimerSize(window.innerWidth - 120);
-    }
-  }, []);
-
-  useEffect(() => {
-    window.addEventListener("resize", () => {
-      if (window.innerWidth < 500) {
-        setTimerSize(window.innerWidth - 120);
-      } else {
-        setTimerSize(400);
-      }
-    });
-
-    return window.removeEventListener("resize", () => {
-      setTimerSize(400);
-    });
-  }, []);
-
-  return (
-    <FullScreen>
-      <Header />
-      <TimerContainer>
-        <Circle>
-          <Timer
-            progress={75}
-            size={timerSize}
-            strokeWidth={timerSize < 400 ? 8 : 15}
-            colorStrokeOne={darkColor}
-            colorStrokeTwo={textColor}
-            timer="10m:20s"
-          />
-        </Circle>
-        <ButtonContainer>
-          <Button>
-            <GrPlay />
-            Start
-          </Button>
-          <Button>
-            <AiOutlinePause />
-            Pause
-          </Button>
-          <Button>
-            <VscDebugRestart />
-            Restart
-          </Button>
-        </ButtonContainer>
-      </TimerContainer>
-      <TodoDescription>
-        <HeadingText>Geography Homework</HeadingText>
-        <ParagraphText>
-          Lorem, ipsum dolor sit amet consectetur adipisicing elit. A
-          exercitationem nostrum, sequi ipsum porro quasi perferendis nemo,
-          tempora explicabo dolore dicta! Et possimus fugiat, inventore nam
-          accusamus porro molestias quia.
-        </ParagraphText>
-      </TodoDescription>
-    </FullScreen>
-  );
-}
+export {
+  FullScreen,
+  MainContainer,
+  TimerContainer,
+  ButtonContainer,
+  Circle,
+  TodoDescription,
+  HeadingText,
+  ParagraphText,
+  Button,
+  SubtitleText,
+};

@@ -1,5 +1,3 @@
-type Props = {};
-
-export const SearchBar = ({}: Props) => {
+export const SearchBar = () => {
   return <div>SearchBar</div>;
 };
