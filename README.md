@@ -13,7 +13,7 @@
 
 ---
 
-Live link: [Link](https://quiet-media.vercel.app/)
+Live link: [Link](https://pomotodoro-launchpad5682.vercel.app/)
 
 ### Built with:
 
