@@ -30,9 +30,13 @@ Live link: [Link](https://pomotodoro-launchpad5682.vercel.app/)
 - Dual theme wiht neumorphic desing.
 - Custom made timer using SVG.
 - Updates document title while timer is running.
-
-https://user-images.githubusercontent.com/43728957/169650123-24cb9d7f-6a89-4e65-b658-e2c09e168216.mp4
-
-
 - Mobile responsive.
+
+
+
+https://user-images.githubusercontent.com/43728957/169650147-6d402ece-6800-4b60-90a2-ad3f2c82d306.mp4
+
+
+
+
 
