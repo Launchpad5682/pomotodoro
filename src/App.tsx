@@ -11,7 +11,7 @@ function App() {
   const { storedValue } = useLocalStorage<TaskInterface[]>("tasks", []);
 
   useEffect(() => {
-    dispatch({ type: "SET_TASKS", payload: storedValue });
+    dispatch({ type: "SET_TASKS", payload: {tasks: storedValue} });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [storedValue]);
 
