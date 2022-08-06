@@ -23,17 +23,20 @@ export const TodoListItem = ({ task }: Props) => {
   const navigate = useNavigate();
 
   const editHandler = () => {
-    dispatch({ type: "TOGGLE_MODAL", payload: { visible: true, edit: true } });
-    dispatch({ type: "SET_ACTIVE_TASK", payload: task });
+    dispatch({
+      type: "TOGGLE_MODAL",
+      payload: { modal: { visible: true, edit: true } },
+    });
+    dispatch({ type: "SET_ACTIVE_TASK", payload: { activeTask: task } });
   };
   const deleteHandler = () => {
     const updatedTasks = tasks.filter((tasc) => tasc._id !== task._id);
     setValue(updatedTasks as TaskInterface[]);
-    dispatch({ type: "SET_TASKS", payload: updatedTasks });
+    dispatch({ type: "SET_TASKS", payload: { tasks: updatedTasks } });
   };
   const openTodoHandler = () => {
     navigate(`/${_id}`);
-    dispatch({ type: "SET_ACTIVE_TASK", payload: task });
+    dispatch({ type: "SET_ACTIVE_TASK", payload: { activeTask: task } });
   };
 
   const changeHandler = (e: ChangeEvent<HTMLInputElement>) => {
@@ -42,7 +45,7 @@ export const TodoListItem = ({ task }: Props) => {
     );
 
     setValue(updatedTasks);
-    dispatch({ type: "SET_TASKS", payload: updatedTasks });
+    dispatch({ type: "SET_TASKS", payload: { tasks: updatedTasks } });
   };
 
   return (

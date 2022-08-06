@@ -1,25 +1,22 @@
 import { createContext, ReactNode, useContext, useReducer } from "react";
-import { TaskInterface } from "../components/types";
-import { reducer } from "../reducers/reducer";
+import { reducer, StateType } from "../reducers/reducer";
 import { lightTheme } from "../themes/themes";
 
-interface DataContextInterface {
-  theme: any;
-  modal: { visible: boolean; edit: boolean };
+type DataContextType = StateType & {
   dispatch: Function;
-  tasks: TaskInterface[] | [];
-  activeTask: null | TaskInterface;
-}
+};
 
 const initialState = {
   theme: lightTheme,
   modal: { visible: false, edit: false },
   tasks: [],
   activeTask: null,
-  dispatch: () => {},
 };
 
-const DataContext = createContext<DataContextInterface>(initialState);
+const DataContext = createContext<DataContextType>({
+  ...initialState,
+  dispatch: () => {},
+});
 
 const DataProvider = ({ children }: { children: ReactNode }) => {
   const [{ theme, modal, activeTask, tasks }, dispatch] = useReducer(

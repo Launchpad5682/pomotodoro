@@ -58,12 +58,12 @@ export const useTask = () => {
   };
 
   const clearActiveTask = () =>
-    dispatch({ type: "SET_ACTIVE_TASK", payload: null });
+    dispatch({ type: "SET_ACTIVE_TASK", payload: { activeTask: null } });
 
   const closeHandler = () => {
     dispatch({
       type: "TOGGLE_MODAL",
-      payload: { visible: false, edit: false },
+      payload: { modal: { visible: false, edit: false } },
     });
     if (edit) {
       clearActiveTask();
@@ -71,7 +71,7 @@ export const useTask = () => {
   };
 
   const saveData = (task: TaskInterface) => {
-    dispatch({ type: "ADD_TASK", payload: task });
+    dispatch({ type: "ADD_TASK", payload: { task } });
   };
 
   const submitHandler = (e: SyntheticEvent): void => {
@@ -81,7 +81,7 @@ export const useTask = () => {
       const updatedTasks = tasks.map((tasc) =>
         tasc._id === taskData._id ? taskData : tasc
       );
-      dispatch({ type: "SET_TASKS", payload: updatedTasks });
+      dispatch({ type: "SET_TASKS", payload: { tasks: updatedTasks } });
       setValue(updatedTasks);
     } else {
       saveData(taskData);

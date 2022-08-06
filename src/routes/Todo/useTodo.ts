@@ -105,13 +105,15 @@ export const useTodo = () => {
     dispatch({
       type: "SET_ACTIVE_TASK",
       payload: {
-        ...activeTask,
-        timeStamp: null,
-        timerMode: updatedTimerMode,
-        breakCount: updatedBreakCount,
+        activeTask: {
+          ...activeTask,
+          timeStamp: null,
+          timerMode: updatedTimerMode,
+          breakCount: updatedBreakCount,
+        },
       },
     });
-    dispatch({ type: "SET_TASKS", payload: updatedTasks });
+    dispatch({ type: "SET_TASKS", payload: { tasks: updatedTasks } });
   };
 
   useEffect(() => {
@@ -232,7 +234,7 @@ export const useTodo = () => {
     );
 
     setValue(updatedTasks as TaskInterface[]);
-    dispatch({ type: "SET_TASKS", payload: updatedTasks });
+    dispatch({ type: "SET_TASKS", payload: { tasks: updatedTasks } });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedTimeStamp]);
 
