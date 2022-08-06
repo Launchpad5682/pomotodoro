@@ -24,7 +24,10 @@ const FullScreen = styled.div`
 export const Home = () => {
   const { modal, dispatch } = useDataProvider();
   const createTask = () =>
-    dispatch({ type: "TOGGLE_MODAL", payload: { visible: true, edit: false } });
+    dispatch({
+      type: "TOGGLE_MODAL",
+      payload: { modal: { visible: true, edit: false } },
+    });
 
   useDocumentTitle("Pomotodoro | Home");
 

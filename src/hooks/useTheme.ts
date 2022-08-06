@@ -20,7 +20,7 @@ export const useTheme = () => {
   useEffect(() => {
     dispatch({
       type: "TOGGLE_THEME",
-      payload: theme === "light" ? lightTheme : darkTheme,
+      payload: { theme: theme === "light" ? lightTheme : darkTheme },
     });
     localStorage.setItem("theme", theme === "light" ? "light" : "dark");
   }, [dispatch, theme]);
