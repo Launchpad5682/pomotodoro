@@ -32,11 +32,9 @@ Live link: [Link](https://pomotodoro-launchpad5682.vercel.app/)
 - Updates document title while timer is running.
 - Mobile responsive.
 
-
-
 https://user-images.githubusercontent.com/43728957/169650147-6d402ece-6800-4b60-90a2-ad3f2c82d306.mp4
 
+### Testing
 
-
-
-
+- Run tests using `npm run test`.
+- Get code coverage using `npm run test -- --coverage --watchAll=false` and `coverage` folder will be created in the repository and can access coverage using `coverage/lcov-report/src/index.html`.

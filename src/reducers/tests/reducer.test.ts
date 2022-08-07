@@ -1,4 +1,3 @@
-import React from "react";
 import { darkTheme, lightTheme } from "../../themes/themes";
 import { reducer } from "../reducer";
 import { TaskInterface } from "../../components/types";
