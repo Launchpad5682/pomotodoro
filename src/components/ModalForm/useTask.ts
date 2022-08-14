@@ -1,20 +1,15 @@
+import axios from "axios";
 import { FormEvent, SyntheticEvent, useState } from "react";
-import { v4 as uuidv4 } from "uuid";
+import { useAuthProvider } from "../../context/auth-context";
 import { useDataProvider } from "../../context/data-context";
-import { useLocalStorage } from "../../hooks/useLocalStorage";
-import { TaskInterface } from "../types";
+import { TaskInterface, TaskInterfaceWithID } from "../types";
 
 export const useTask = () => {
-  const { modal, tasks, activeTask, dispatch } = useDataProvider();
+  const { modal, activeTask, dispatch } = useDataProvider();
   const { edit } = modal;
-
-  const { setValue } = useLocalStorage<TaskInterface[]>(
-    "tasks",
-    tasks as TaskInterface[]
-  );
+  const { token } = useAuthProvider();
 
   const initialValue: TaskInterface = {
-    _id: uuidv4(),
     title: "",
     description: "",
     focusTime: 0,
@@ -26,8 +21,8 @@ export const useTask = () => {
     completed: false,
   };
 
-  const [taskData, setTaskData] = useState<TaskInterface>(() =>
-    edit ? (activeTask as TaskInterface) : initialValue
+  const [taskData, setTaskData] = useState<TaskInterfaceWithID | TaskInterface>(
+    () => (edit ? (activeTask as TaskInterfaceWithID) : initialValue)
   );
 
   const changeHandler = (
@@ -74,21 +69,34 @@ export const useTask = () => {
     dispatch({ type: "ADD_TASK", payload: { task } });
   };
 
-  const submitHandler = (e: SyntheticEvent): void => {
+  const submitHandler = async (e: SyntheticEvent) => {
     e.preventDefault();
     if (edit) {
       clearActiveTask();
-      const updatedTasks = tasks.map((tasc) =>
-        tasc._id === taskData._id ? taskData : tasc
-      );
-      dispatch({ type: "SET_TASKS", payload: { tasks: updatedTasks } });
-      setValue(updatedTasks);
+      try {
+        const { data, status } = await axios.put(
+          `${process.env.REACT_APP_API_URI}/todo`,
+          { todo: taskData },
+          { headers: { authorization: token } }
+        );
+
+        if (status === 200) {
+          dispatch({ type: "UPDATE_TASK", payload: { task: data.todo } });
+        }
+      } catch (error) {}
     } else {
-      saveData(taskData);
-      setValue((tasks) => [...tasks, taskData]);
+      try {
+        const { data, status } = await axios.post(
+          `${process.env.REACT_APP_API_URI}/todo`,
+          { todo: taskData },
+          { headers: { authorization: token } }
+        );
+        if (status === 201) {
+          saveData(data.todo);
+        }
+      } catch (error) {}
     }
     setTaskData({
-      _id: uuidv4(),
       title: "",
       description: "",
       focusTime: 0,
