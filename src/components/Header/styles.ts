@@ -31,6 +31,7 @@ const ThemeModeIconContainer = styled.span`
   box-shadow: ${(props) => props.theme.iconShadow};
   cursor: pointer;
   margin-left: auto;
+  margin-right: 1rem;
   &:hover {
     box-shadow: ${(props) => props.theme.iconShadowHover};
   }
