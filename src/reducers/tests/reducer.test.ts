@@ -1,6 +1,6 @@
 import { darkTheme, lightTheme } from "../../themes/themes";
 import { reducer } from "../reducer";
-import { TaskInterface } from "../../components/types";
+import { TaskInterface, TaskInterfaceWithID } from "../../components/types";
 
 let initialState = {
   theme: lightTheme,
@@ -77,7 +77,7 @@ describe("Testing reducer for the application", () => {
   });
 
   it("Add task", () => {
-    const task: TaskInterface = {
+    const task: TaskInterfaceWithID = {
       _id: "v41322",
       title: "Learn Typescript",
       description: "",
@@ -104,7 +104,7 @@ describe("Testing reducer for the application", () => {
   });
 
   it("Set active task", () => {
-    const task: TaskInterface = {
+    const task: TaskInterfaceWithID = {
       _id: "v41322",
       title: "Learn Typescript",
       description: "",
