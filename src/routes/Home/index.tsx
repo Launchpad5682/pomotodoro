@@ -1,4 +1,3 @@
-import styled from "styled-components";
 import {
   FloatingActionButton,
   Header,
@@ -8,18 +7,7 @@ import {
 import { RiAddLine } from "react-icons/ri";
 import { useDataProvider } from "../../context/data-context";
 import { useDocumentTitle } from "../../hooks/useDocumentTitle";
-
-const FullScreen = styled.div`
-  height: 100vh;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  padding: 0;
-  box-sizing: border-box;
-  overflow-y: hidden;
-  background: linear-gradient(${(props) => props.theme.backgroundColor});
-  color: ${(props) => props.theme.textColor};
-`;
+import * as Common from "../../styles/common";
 
 export const Home = () => {
   const { modal, dispatch } = useDataProvider();
@@ -32,13 +20,13 @@ export const Home = () => {
   useDocumentTitle("Pomotodoro | Home");
 
   return (
-    <FullScreen>
+    <Common.FullScreen>
       <Header />
       <TodoList />
       <FloatingActionButton handler={createTask}>
         <RiAddLine />
       </FloatingActionButton>
       {modal.visible && <ModalForm />}
-    </FullScreen>
+    </Common.FullScreen>
   );
 };
