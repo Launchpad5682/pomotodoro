@@ -1,4 +1,4 @@
-import { TaskInterface, TaskInterfaceWithID } from "../../components/types";
+import { TaskInterfaceWithID } from "../../components/types";
 import { ThemeType } from "../../themes/type";
 
 export type ModalType = { visible: boolean; edit: boolean };
