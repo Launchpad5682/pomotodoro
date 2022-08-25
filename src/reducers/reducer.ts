@@ -1,21 +1,4 @@
-import { TaskInterface } from "../components/types";
-import { ThemeType } from "../themes/type";
-
-export type ModalType = { visible: boolean; edit: boolean };
-
-export type StateType = {
-  theme: ThemeType;
-  modal: ModalType;
-  tasks: TaskInterface[] | [];
-  activeTask: null | TaskInterface;
-};
-
-type ACTIONTYPE =
-  | { type: "TOGGLE_THEME"; payload: { theme: ThemeType } }
-  | { type: "TOGGLE_MODAL"; payload: { modal: ModalType } }
-  | { type: "SET_TASKS"; payload: { tasks: TaskInterface[] | [] } }
-  | { type: "ADD_TASK"; payload: {task: TaskInterface} }
-  | { type: "SET_ACTIVE_TASK"; payload: { activeTask: null | TaskInterface } };
+import { ACTIONTYPE, StateType } from "./types/reducer.type";
 
 export const reducer = (state: StateType, action: ACTIONTYPE) => {
   switch (action.type) {
@@ -27,6 +10,18 @@ export const reducer = (state: StateType, action: ACTIONTYPE) => {
       return { ...state, tasks: [...action.payload.tasks] };
     case "ADD_TASK":
       return { ...state, tasks: [...state.tasks, action.payload.task] };
+    case "UPDATE_TASK": {
+      const updatedTasks = state.tasks.map((task) =>
+        task._id === action.payload.task._id ? action.payload.task : task
+      );
+      return { ...state, tasks: updatedTasks };
+    }
+    case "DELETE_TASK": {
+      const filteredTasks = state.tasks.filter(
+        (task) => task._id !== action.payload.task._id
+      );
+      return { ...state, tasks: filteredTasks };
+    }
     case "SET_ACTIVE_TASK":
       return { ...state, activeTask: action.payload.activeTask };
     default:

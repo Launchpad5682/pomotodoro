@@ -1,13 +1,15 @@
+import axios from "axios";
 import { useEffect, useState } from "react";
-import { TaskInterface } from "../../components/types";
+import { TaskInterfaceWithID } from "../../components/types";
+import { useAuthProvider } from "../../context/auth-context";
 import { useDataProvider } from "../../context/data-context";
 import { useDebounce } from "../../hooks/useDebounce";
 import { useDocumentTitle } from "../../hooks/useDocumentTitle";
-import { useLocalStorage } from "../../hooks/useLocalStorage";
 import { percentageTimeLeft } from "../../utils";
 
 export const useTodo = () => {
   const [timerSwitch, setTimerSwitch] = useState(false);
+  const { token } = useAuthProvider();
   const {
     theme: { textColor, darkColor },
     activeTask,
@@ -25,7 +27,7 @@ export const useTodo = () => {
     timerMode,
     timeStamp,
     breakCount,
-  } = activeTask as TaskInterface;
+  } = activeTask as TaskInterfaceWithID;
   const [timer, setTimer] = useState({
     min: 0,
     sec: 0,
@@ -40,11 +42,6 @@ export const useTodo = () => {
     1500
   );
   const setDocumentTitle = useDocumentTitle(`${timer.min}m:${timer.sec}s`);
-
-  const { setValue } = useLocalStorage<TaskInterface[]>(
-    "tasks",
-    tasks as TaskInterface[]
-  );
 
   const [totalTime, setTotalTime] = useState(
     timerMode === "focus"
@@ -101,19 +98,32 @@ export const useTodo = () => {
           }
         : task
     );
-    setValue(updatedTasks as TaskInterface[]);
-    dispatch({
-      type: "SET_ACTIVE_TASK",
-      payload: {
-        activeTask: {
-          ...activeTask,
-          timeStamp: null,
-          timerMode: updatedTimerMode,
-          breakCount: updatedBreakCount,
-        },
-      },
-    });
-    dispatch({ type: "SET_TASKS", payload: { tasks: updatedTasks } });
+    (async () => {
+      try {
+        const { data, status } = await axios.put(
+          `${process.env.REACT_APP_API_URI}/todo`,
+          { todo: { ...updatedTasks } },
+          { headers: { authorization: token } }
+        );
+        dispatch({
+          type: "SET_ACTIVE_TASK",
+          payload: {
+            activeTask: {
+              ...activeTask,
+              timeStamp: null,
+              timerMode: updatedTimerMode,
+              breakCount: updatedBreakCount,
+            },
+          },
+        });
+        if (status === 200) {
+          dispatch({
+            type: "UPDATE_TASK",
+            payload: { task: data.todo },
+          });
+        }
+      } catch (error) {}
+    })();
   };
 
   useEffect(() => {
@@ -222,19 +232,26 @@ export const useTodo = () => {
     );
   }, [setDocumentTitle, timer]);
 
-  //saving the timestamp to localStorage
+  //saving the timestamp to database
   useEffect(() => {
-    const updatedTasks = tasks.map((task) =>
-      task._id === _id
-        ? {
-            ...task,
-            timeStamp: debouncedTimeStamp,
-          }
-        : { ...task }
-    );
+    const task = tasks.filter((task) => task._id === _id);
+    const updatedTask = {
+      ...task[0],
+      timeStamp: debouncedTimeStamp,
+    };
+    (async () => {
+      try {
+        const { data, status } = await axios.put(
+          `${process.env.REACT_APP_API_URI}/todo`,
+          { todo: updatedTask },
+          { headers: { authorization: token } }
+        );
 
-    setValue(updatedTasks as TaskInterface[]);
-    dispatch({ type: "SET_TASKS", payload: { tasks: updatedTasks } });
+        if (status === 200) {
+          dispatch({ type: "UPDATE_TASK", payload: { task: data.todo } });
+        }
+      } catch (error) {}
+    })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedTimeStamp]);
 

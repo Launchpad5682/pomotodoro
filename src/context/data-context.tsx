@@ -1,5 +1,6 @@
 import { createContext, ReactNode, useContext, useReducer } from "react";
-import { reducer, StateType } from "../reducers/reducer";
+import { reducer } from "../reducers/reducer";
+import { StateType } from "../reducers/types/reducer.type";
 import { lightTheme } from "../themes/themes";
 
 type DataContextType = StateType & {

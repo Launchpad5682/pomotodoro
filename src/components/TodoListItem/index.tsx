@@ -2,23 +2,21 @@ import * as Styled from "./styles";
 import { AiOutlineDelete, AiOutlineEdit } from "react-icons/ai";
 import { MdOutlineOpenInNew } from "react-icons/md";
 import { CheckBox } from "../CheckBox";
-import { TaskInterface } from "../types";
+import { TaskInterfaceWithID } from "../types";
 import { useDataProvider } from "../../context/data-context";
-import { useLocalStorage } from "../../hooks/useLocalStorage";
 import { ChangeEvent } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { useAuthProvider } from "../../context/auth-context";
 
 type Props = {
-  task: TaskInterface;
+  task: TaskInterfaceWithID;
 };
 
 export const TodoListItem = ({ task }: Props) => {
   const { _id, title, completed } = task;
-  const { tasks, dispatch } = useDataProvider();
-  const { setValue } = useLocalStorage<TaskInterface[]>(
-    "tasks",
-    tasks as TaskInterface[]
-  );
+  const { dispatch } = useDataProvider();
+  const { token } = useAuthProvider();
 
   const navigate = useNavigate();
 
@@ -29,23 +27,35 @@ export const TodoListItem = ({ task }: Props) => {
     });
     dispatch({ type: "SET_ACTIVE_TASK", payload: { activeTask: task } });
   };
-  const deleteHandler = () => {
-    const updatedTasks = tasks.filter((tasc) => tasc._id !== task._id);
-    setValue(updatedTasks as TaskInterface[]);
-    dispatch({ type: "SET_TASKS", payload: { tasks: updatedTasks } });
+  const deleteHandler = async () => {
+    try {
+      const { status } = await axios.delete(
+        `${process.env.REACT_APP_API_URI}/todo/${_id}`,
+        { headers: { authorization: token } }
+      );
+
+      if (status === 204) {
+        dispatch({ type: "DELETE_TASK", payload: { task } });
+      }
+    } catch (error) {}
   };
   const openTodoHandler = () => {
     navigate(`/${_id}`);
     dispatch({ type: "SET_ACTIVE_TASK", payload: { activeTask: task } });
   };
 
-  const changeHandler = (e: ChangeEvent<HTMLInputElement>) => {
-    const updatedTasks = tasks.map((tasc) =>
-      tasc._id === task._id ? { ...task, completed: !task.completed } : tasc
-    );
+  const changeHandler = async (e: ChangeEvent<HTMLInputElement>) => {
+    try {
+      const { data, status } = await axios.put(
+        `${process.env.REACT_APP_API_URI}/todo`,
+        { todo: { ...task, completed: !task.completed } },
+        { headers: { authorization: token } }
+      );
 
-    setValue(updatedTasks);
-    dispatch({ type: "SET_TASKS", payload: { tasks: updatedTasks } });
+      if (status === 200) {
+        dispatch({ type: "UPDATE_TASK", payload: { task: data.todo } });
+      }
+    } catch (error) {}
   };
 
   return (
